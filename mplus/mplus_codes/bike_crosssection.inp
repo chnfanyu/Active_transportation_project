@@ -1,0 +1,43 @@
+TITLE: covid data mimic;
+DATA: FILE IS data_bike.csv;
+VARIABLE: NAMES ARE prebike frebike intent educ age income hhveh bike prebzm white disab 
+cov1-cov12 onl1-onl5 env1-env3 soc1-soc3 out1-out4;
+          MISSING = .;
+          USEVARIABLES ARE cov1-cov12 env1-env3 onl1-onl5 prebike bike frebike intent
+          age educ hhveh income; 
+          CATEGORICAL = cov1-cov12 env1-env3 onl1-onl5 prebike bike intent; !frebike; 
+
+ANALYSIS: !TYPE = EFA 5 6;
+
+          !ROTATION=VARIMAX;
+          !ROTATION=GEOMIN (oblique);
+          !ROTATION=PROMAX;
+          !ESTIMATOR=ML;
+
+          PARAMETERIZATION=THETA;
+          !Bootstrap = 1000;
+          !STARTS = 100;
+
+MODEL:
+          f1 by cov1-cov4;
+          f2 by cov11 cov12 cov3;
+          f3 by cov5-cov10;
+          f4 by env1-env3;          
+          f5 by onl1-onl5;
+          f6 by prebike bike frebike;                
+          intent ON f1 f2 f3 f4 f5 f6 age educ hhveh income;
+          
+          !set the factor variance to 1
+          !f1 by cov1-cov4*;
+          !f2 by cov11* cov12 cov3;
+          !f3 by cov5-cov10*;
+          !f4 by env1-env3*;          
+          !f5 by onl1-onl5*;
+          !f6 by prebike* bike frebike;                
+          !intent ON f1 f2 f3 f4 f5 f6 age educ hhveh income;   
+          !f1-f6@1;     
+
+
+OUTPUT:   !STANDARDIZED;
+          !STANDARDIZED CINTERVAL(bcbootstrap);
+          STDYX;

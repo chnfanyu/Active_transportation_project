@@ -1,0 +1,626 @@
+Mplus VERSION 8.8
+MUTHEN & MUTHEN
+09/19/2022   8:29 PM
+
+INPUT INSTRUCTIONS
+
+   TITLE: covid data;
+   DATA: FILE IS data_bike.csv;
+   VARIABLE: NAMES ARE prebike frebike intent educ age income hhveh bike prebzm white disab
+     cov1-cov12 onl1-onl5 env1-env3 soc1-soc3 out1-out4;
+            MISSING = .;
+            USEVARIABLES ARE cov1-cov12 env1-env3 onl1-onl5 bike prebike frebike;
+            CATEGORICAL = cov1-cov12 env1-env3 onl1-onl5 bike prebike;
+
+  ANALYSIS: TYPE = EFA 6 7;
+            ROTATION=VARIMAX;
+
+            !ROTATION=GEOMIN (oblique);
+            !ROTATION=PROMAX;
+            !ESTIMATOR=MLR;
+
+
+
+
+  OUTPUT: STANDARDIZED;
+          !MODINDICES;
+
+  PLOT: TYPE IS PLOT2;
+
+
+
+*** WARNING in OUTPUT command
+  STANDARDIZED (STD, STDY, STDYX) options are not available for TYPE=EFA.
+  Request for STANDARDIZED options will be ignored.  Note that STANDARDIZED options
+  are available with the use of EFA factors (ESEM) declared in the MODEL command.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+covid data;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        8152
+
+Number of dependent variables                                   23
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   FREBIKE
+
+  Binary and ordered categorical (ordinal)
+   COV1        COV2        COV3        COV4        COV5        COV6
+   COV7        COV8        COV9        COV10       COV11       COV12
+   ENV1        ENV2        ENV3        ONL1        ONL2        ONL3
+   ONL4        ONL5        BIKE        PREBIKE
+
+
+Estimator                                                    WLSMV
+Rotation                                                   VARIMAX
+Row standardization                                    CORRELATION
+Type of rotation                                        ORTHOGONAL
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization Specifications for the Exploratory Factor Analysis
+Rotation Algorithm
+  Number of random starts                                        0
+  Maximum number of iterations                               10000
+  Derivative convergence criterion                       0.100D-04
+Link                                                        PROBIT
+
+Input data file(s)
+  data_bike.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            75
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              COV1          COV2          COV3          COV4          COV5
+              ________      ________      ________      ________      ________
+ COV1           0.998
+ COV2           0.998         0.999
+ COV3           0.997         0.998         0.999
+ COV4           0.998         0.998         0.998         0.999
+ COV5           0.598         0.599         0.599         0.599         0.599
+ COV6           0.997         0.998         0.998         0.998         0.599
+ COV7           0.997         0.997         0.997         0.997         0.598
+ COV8           0.997         0.998         0.998         0.998         0.599
+ COV9           0.997         0.998         0.997         0.997         0.598
+ COV10          0.998         0.998         0.998         0.998         0.599
+ COV11          0.997         0.998         0.998         0.998         0.599
+ COV12          0.998         0.998         0.998         0.998         0.599
+ ENV1           0.997         0.998         0.997         0.998         0.599
+ ENV2           0.997         0.998         0.998         0.998         0.598
+ ENV3           0.997         0.998         0.997         0.998         0.598
+ ONL1           0.997         0.997         0.997         0.997         0.598
+ ONL2           0.993         0.994         0.993         0.994         0.598
+ ONL3           0.994         0.995         0.995         0.995         0.597
+ ONL4           0.995         0.996         0.996         0.996         0.598
+ ONL5           0.995         0.996         0.995         0.995         0.598
+ BIKE           0.998         0.999         0.999         0.999         0.599
+ PREBIKE        0.994         0.995         0.995         0.995         0.597
+ FREBIKE        0.982         0.983         0.983         0.983         0.589
+
+
+           Covariance Coverage
+              COV6          COV7          COV8          COV9          COV10
+              ________      ________      ________      ________      ________
+ COV6           0.999
+ COV7           0.997         0.998
+ COV8           0.998         0.997         0.998
+ COV9           0.998         0.997         0.998         0.998
+ COV10          0.998         0.998         0.998         0.998         0.999
+ COV11          0.998         0.997         0.997         0.997         0.998
+ COV12          0.998         0.997         0.998         0.998         0.998
+ ENV1           0.998         0.997         0.998         0.997         0.998
+ ENV2           0.998         0.997         0.998         0.997         0.998
+ ENV3           0.998         0.997         0.998         0.997         0.998
+ ONL1           0.997         0.996         0.997         0.997         0.997
+ ONL2           0.994         0.993         0.994         0.994         0.994
+ ONL3           0.995         0.994         0.995         0.994         0.995
+ ONL4           0.996         0.995         0.996         0.996         0.996
+ ONL5           0.996         0.995         0.995         0.995         0.996
+ BIKE           0.999         0.998         0.998         0.998         0.999
+ PREBIKE        0.995         0.994         0.995         0.994         0.995
+ FREBIKE        0.983         0.982         0.983         0.982         0.983
+
+
+           Covariance Coverage
+              COV11         COV12         ENV1          ENV2          ENV3
+              ________      ________      ________      ________      ________
+ COV11          0.998
+ COV12          0.998         0.999
+ ENV1           0.997         0.998         0.998
+ ENV2           0.997         0.998         0.998         0.998
+ ENV3           0.997         0.998         0.998         0.998         0.998
+ ONL1           0.997         0.997         0.997         0.997         0.997
+ ONL2           0.993         0.994         0.994         0.994         0.994
+ ONL3           0.994         0.995         0.995         0.995         0.995
+ ONL4           0.996         0.996         0.996         0.996         0.996
+ ONL5           0.995         0.996         0.995         0.996         0.995
+ BIKE           0.998         0.999         0.998         0.998         0.998
+ PREBIKE        0.995         0.995         0.995         0.995         0.995
+ FREBIKE        0.982         0.983         0.983         0.983         0.983
+
+
+           Covariance Coverage
+              ONL1          ONL2          ONL3          ONL4          ONL5
+              ________      ________      ________      ________      ________
+ ONL1           0.998
+ ONL2           0.993         0.994
+ ONL3           0.994         0.991         0.995
+ ONL4           0.995         0.992         0.995         0.997
+ ONL5           0.995         0.992         0.995         0.996         0.996
+ BIKE           0.998         0.994         0.995         0.997         0.996
+ PREBIKE        0.994         0.991         0.992         0.993         0.993
+ FREBIKE        0.982         0.979         0.980         0.981         0.981
+
+
+           Covariance Coverage
+              BIKE          PREBIKE       FREBIKE
+              ________      ________      ________
+ BIKE           1.000
+ PREBIKE        0.996         0.996
+ FREBIKE        0.983         0.981         0.983
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    COV1
+      Category 1    0.085          690.000
+      Category 2    0.142         1154.000
+      Category 3    0.163         1325.000
+      Category 4    0.311         2534.000
+      Category 5    0.299         2435.000
+    COV2
+      Category 1    0.049          399.000
+      Category 2    0.074          606.000
+      Category 3    0.122          995.000
+      Category 4    0.358         2912.000
+      Category 5    0.397         3231.000
+    COV3
+      Category 1    0.062          502.000
+      Category 2    0.079          641.000
+      Category 3    0.112          909.000
+      Category 4    0.285         2322.000
+      Category 5    0.463         3766.000
+    COV4
+      Category 1    0.101          825.000
+      Category 2    0.158         1290.000
+      Category 3    0.237         1929.000
+      Category 4    0.295         2401.000
+      Category 5    0.208         1696.000
+    COV5
+      Category 1    0.116          567.000
+      Category 2    0.178          867.000
+      Category 3    0.314         1531.000
+      Category 4    0.239         1165.000
+      Category 5    0.154          753.000
+    COV6
+      Category 1    0.046          378.000
+      Category 2    0.226         1840.000
+      Category 3    0.447         3635.000
+      Category 4    0.205         1672.000
+      Category 5    0.076          615.000
+    COV7
+      Category 1    0.026          208.000
+      Category 2    0.052          422.000
+      Category 3    0.194         1578.000
+      Category 4    0.387         3145.000
+      Category 5    0.342         2781.000
+    COV8
+      Category 1    0.459         3737.000
+      Category 2    0.386         3139.000
+      Category 3    0.107          870.000
+      Category 4    0.029          237.000
+      Category 5    0.019          156.000
+    COV9
+      Category 1    0.033          270.000
+      Category 2    0.140         1142.000
+      Category 3    0.378         3073.000
+      Category 4    0.292         2374.000
+      Category 5    0.157         1277.000
+    COV10
+      Category 1    0.025          206.000
+      Category 2    0.054          441.000
+      Category 3    0.202         1641.000
+      Category 4    0.342         2788.000
+      Category 5    0.376         3065.000
+    COV11
+      Category 1    0.471         3836.000
+      Category 2    0.176         1431.000
+      Category 3    0.118          960.000
+      Category 4    0.138         1124.000
+      Category 5    0.097          788.000
+    COV12
+      Category 1    0.309         2514.000
+      Category 2    0.227         1846.000
+      Category 3    0.169         1375.000
+      Category 4    0.167         1363.000
+      Category 5    0.128         1045.000
+    ENV1
+      Category 1    0.027          222.000
+      Category 2    0.070          569.000
+      Category 3    0.252         2049.000
+      Category 4    0.421         3427.000
+      Category 5    0.230         1871.000
+    ENV2
+      Category 1    0.079          643.000
+      Category 2    0.166         1355.000
+      Category 3    0.299         2436.000
+      Category 4    0.290         2364.000
+      Category 5    0.165         1341.000
+    ENV3
+      Category 1    0.152         1233.000
+      Category 2    0.174         1412.000
+      Category 3    0.272         2213.000
+      Category 4    0.255         2073.000
+      Category 5    0.148         1207.000
+    ONL1
+      Category 1    0.040          329.000
+      Category 2    0.062          502.000
+      Category 3    0.171         1394.000
+      Category 4    0.375         3050.000
+      Category 5    0.351         2858.000
+    ONL2
+      Category 1    0.071          577.000
+      Category 2    0.075          610.000
+      Category 3    0.349         2833.000
+      Category 4    0.245         1987.000
+      Category 5    0.259         2100.000
+    ONL3
+      Category 1    0.038          311.000
+      Category 2    0.077          628.000
+      Category 3    0.192         1560.000
+      Category 4    0.406         3294.000
+      Category 5    0.286         2322.000
+    ONL4
+      Category 1    0.130         1054.000
+      Category 2    0.187         1516.000
+      Category 3    0.169         1373.000
+      Category 4    0.325         2640.000
+      Category 5    0.190         1541.000
+    ONL5
+      Category 1    0.141         1146.000
+      Category 2    0.184         1496.000
+      Category 3    0.214         1738.000
+      Category 4    0.291         2367.000
+      Category 5    0.169         1374.000
+    BIKE
+      Category 1    0.537         4379.000
+      Category 2    0.463         3773.000
+    PREBIKE
+      Category 1    0.645         5239.000
+      Category 2    0.123          997.000
+      Category 3    0.110          893.000
+      Category 4    0.092          744.000
+      Category 5    0.030          244.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     FREBIKE               0.537       2.910       0.000   79.14%       0.000      0.000      0.000
+            8016.000       1.681       8.729       7.000    1.05%       0.000      1.000
+
+
+SUMMARY OF MODEL FIT INFORMATION
+
+
+                                  Degrees of
+     Model           Chi-Square    Freedom     P-Value
+
+     6-factor          5031.354       130       0.0000
+     7-factor          2645.588       113       0.0000
+
+
+RESULTS FOR EXPLORATORY FACTOR ANALYSIS
+
+
+           EIGENVALUES FOR SAMPLE CORRELATION MATRIX
+                  1             2             3             4             5
+              ________      ________      ________      ________      ________
+                6.488         2.711         1.944         1.729         1.320
+
+
+           EIGENVALUES FOR SAMPLE CORRELATION MATRIX
+                  6             7             8             9            10
+              ________      ________      ________      ________      ________
+                0.987         0.917         0.800         0.765         0.687
+
+
+           EIGENVALUES FOR SAMPLE CORRELATION MATRIX
+                 11            12            13            14            15
+              ________      ________      ________      ________      ________
+                0.597         0.505         0.469         0.453         0.406
+
+
+           EIGENVALUES FOR SAMPLE CORRELATION MATRIX
+                 16            17            18            19            20
+              ________      ________      ________      ________      ________
+                0.381         0.341         0.317         0.296         0.280
+
+
+           EIGENVALUES FOR SAMPLE CORRELATION MATRIX
+                 21            22            23
+              ________      ________      ________
+                0.243         0.209         0.155
+
+
+EXPLORATORY FACTOR ANALYSIS WITH 6 FACTOR(S):
+
+
+MODEL FIT INFORMATION
+
+Chi-Square Test of Model Fit
+
+          Value                           5031.354*
+          Degrees of Freedom                   130
+          P-Value                           0.0000
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.068
+
+Root Mean Square Residual
+
+          Value                              0.029
+
+
+           VARIMAX ROTATED LOADINGS
+                  1             2             3             4             5
+              ________      ________      ________      ________      ________
+ COV1           0.705         0.029         0.235         0.095         0.316
+ COV2           0.672        -0.054         0.299         0.068         0.292
+ COV3           0.377         0.073         0.497         0.261         0.344
+ COV4           0.335         0.015         0.221         0.248         0.289
+ COV5           0.239        -0.002         0.058         0.148         0.544
+ COV6           0.212         0.016         0.029         0.136         0.719
+ COV7           0.096         0.001         0.284        -0.047         0.770
+ COV8           0.162         0.093        -0.185         0.179         0.535
+ COV9           0.052        -0.038         0.217         0.035         0.749
+ COV10          0.081        -0.016         0.369         0.030         0.710
+ COV11         -0.266        -0.085        -0.834        -0.184        -0.209
+ COV12         -0.199        -0.088        -0.729        -0.206        -0.185
+ ENV1           0.064        -0.135         0.143         0.686         0.079
+ ENV2           0.039        -0.192         0.090         0.830         0.031
+ ENV3           0.116        -0.074         0.145         0.623         0.198
+ ONL1           0.067        -0.040         0.026        -0.006         0.071
+ ONL2           0.025        -0.078         0.038         0.058         0.049
+ ONL3           0.047        -0.018         0.120         0.070         0.080
+ ONL4           0.054         0.076         0.007         0.137         0.124
+ ONL5           0.070         0.077         0.024         0.150         0.168
+ BIKE          -0.036        -0.914         0.033         0.034        -0.048
+ PREBIKE        0.018        -0.885        -0.103         0.194         0.006
+ FREBIKE        0.011        -0.624        -0.064         0.115         0.004
+
+
+           VARIMAX ROTATED LOADINGS
+                  6
+              ________
+ COV1           0.122
+ COV2           0.124
+ COV3           0.253
+ COV4           0.205
+ COV5           0.111
+ COV6           0.164
+ COV7           0.139
+ COV8           0.108
+ COV9           0.100
+ COV10          0.142
+ COV11         -0.072
+ COV12         -0.082
+ ENV1           0.151
+ ENV2           0.109
+ ENV3           0.126
+ ONL1           0.392
+ ONL2           0.372
+ ONL3           0.743
+ ONL4           0.682
+ ONL5           0.656
+ BIKE           0.008
+ PREBIKE        0.029
+ FREBIKE        0.023
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              COV1          COV2          COV3          COV4          COV5
+              ________      ________      ________      ________      ________
+                0.323         0.350         0.355         0.652         0.610
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              COV6          COV7          COV8          COV9          COV10
+              ________      ________      ________      ________      ________
+                0.392         0.296         0.601         0.377         0.332
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              COV11         COV12         ENV1          ENV2          ENV3
+              ________      ________      ________      ________      ________
+                0.144         0.338         0.457         0.251         0.517
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              ONL1          ONL2          ONL3          ONL4          ONL5
+              ________      ________      ________      ________      ________
+                0.835         0.848         0.419         0.491         0.507
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              BIKE          PREBIKE       FREBIKE
+              ________      ________      ________
+                0.158         0.167         0.592
+
+
+EXPLORATORY FACTOR ANALYSIS WITH 7 FACTOR(S):
+
+
+MODEL FIT INFORMATION
+
+Chi-Square Test of Model Fit
+
+          Value                           2645.588*
+          Degrees of Freedom                   113
+          P-Value                           0.0000
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.052
+
+Root Mean Square Residual
+
+          Value                              0.020
+
+
+           VARIMAX ROTATED LOADINGS
+                  1             2             3             4             5
+              ________      ________      ________      ________      ________
+ COV1           0.645         0.168         0.272         0.046         0.260
+ COV2           0.770         0.028         0.262        -0.023         0.276
+ COV3           0.327         0.228         0.572         0.043         0.275
+ COV4           0.285         0.275         0.310        -0.012         0.183
+ COV5           0.197         0.383         0.148        -0.036         0.412
+ COV6           0.166         0.492         0.129        -0.027         0.565
+ COV7           0.170         0.130         0.179         0.037         0.789
+ COV8           0.051         0.698        -0.007         0.036         0.280
+ COV9           0.113         0.176         0.131        -0.005         0.741
+ COV10          0.153         0.059         0.259         0.029         0.752
+ COV11         -0.233         0.029        -0.822        -0.072        -0.265
+ COV12         -0.129        -0.037        -0.786        -0.058        -0.201
+ ENV1           0.089        -0.018         0.111        -0.110         0.090
+ ENV2           0.040         0.063         0.108        -0.187        -0.003
+ ENV3           0.094         0.171         0.189        -0.079         0.130
+ ONL1           0.095        -0.018        -0.008        -0.025         0.089
+ ONL2           0.057        -0.043        -0.004        -0.060         0.077
+ ONL3           0.066        -0.038         0.088         0.000         0.108
+ ONL4          -0.008         0.226         0.105         0.048         0.030
+ ONL5          -0.001         0.268         0.135         0.044         0.059
+ BIKE          -0.009        -0.137        -0.014        -0.903         0.018
+ PREBIKE        0.006         0.050        -0.073        -0.896        -0.021
+ FREBIKE       -0.008         0.047        -0.029        -0.638        -0.019
+
+
+           VARIMAX ROTATED LOADINGS
+                  6             7
+              ________      ________
+ COV1           0.129         0.115
+ COV2           0.138         0.103
+ COV3           0.232         0.215
+ COV4           0.187         0.208
+ COV5           0.099         0.101
+ COV6           0.148         0.077
+ COV7           0.151         0.009
+ COV8           0.063         0.087
+ COV9           0.106         0.087
+ COV10          0.155         0.099
+ COV11         -0.056        -0.162
+ COV12         -0.056        -0.162
+ ENV1           0.161         0.722
+ ENV2           0.112         0.820
+ ENV3           0.119         0.614
+ ONL1           0.398         0.016
+ ONL2           0.379         0.084
+ ONL3           0.768         0.092
+ ONL4           0.665         0.097
+ ONL5           0.639         0.101
+ BIKE           0.011         0.051
+ PREBIKE        0.022         0.181
+ FREBIKE        0.016         0.098
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              COV1          COV2          COV3          COV4          COV5
+              ________      ________      ________      ________      ________
+                0.382         0.232         0.336         0.635         0.602
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              COV6          COV7          COV8          COV9          COV10
+              ________      ________      ________      ________      ________
+                0.366         0.276         0.420         0.371         0.307
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              COV11         COV12         ENV1          ENV2          ENV3
+              ________      ________      ________      ________      ________
+                0.165         0.292         0.412         0.262         0.512
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              ONL1          ONL2          ONL3          ONL4          ONL5
+              ________      ________      ________      ________      ________
+                0.823         0.834         0.376         0.483         0.486
+
+
+           ESTIMATED RESIDUAL VARIANCES
+              BIKE          PREBIKE       FREBIKE
+              ________      ________      ________
+                0.163         0.155         0.580
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Eigenvalues for exploratory factor analysis
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for EFA.
+  No diagram output was produced.
+
+
+     Beginning Time:  20:29:48
+        Ending Time:  20:29:57
+       Elapsed Time:  00:00:09
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2022 Muthen & Muthen

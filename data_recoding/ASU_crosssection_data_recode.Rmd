@@ -1,0 +1,450 @@
+---
+title: "ASU cross-section data recoding"
+output: html_document
+date: '2022-09-18'
+---
+
+The wave 1 dataset - cross section outputs
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+```
+
+```{r}
+df_wave1 <- read.csv("./../dataset_main/covid_pooled_public_w1b_1.1.0b7.csv", fileEncoding = 'UTF-8-BOM') #wave 1b 
+df_wave2 <- read.csv("./../dataset_main/covidfuture_wave_2_public_Main_2.0.0b6.csv", fileEncoding = 'UTF-8-BOM') #wave 2
+df_wave3 <- read.csv("./../dataset_main/covidfuture_wave_3_public_Main_3.0.0b6.csv") #wave 3
+```
+
+The dataset records unanswered and unshown results. replace all of these answers with "NA".
+
+```{r}
+# replace the not responding value with NA 
+df_wave1[df_wave1 == "Question not displayed to respondent"] <- NA
+df_wave1[df_wave1 == "Variable not available in datasource"] <- NA
+df_wave1[df_wave1 == "Seen but unanswered"] <- NA
+df_wave1[df_wave1 == "Not selected"] <- NA
+df_wave1[df_wave1 == "Nonmetropolitan"] <- NA
+# remove the columns of missing data descriptions 
+# remove the variable for showing attention ("trap_")
+df_wave1 %<>%
+  select(-contains("_miss"), -contains("trap_"), -contains("_trap"))
+
+```
+
+The types of answers that would be recorded to ordinal numeric
+
+```{r}
+# ordinal variables
+Frequency    = c("Never", "A few times/year", "A few times/month", "Once/week", "A few times/week", "Every day")
+Frequency1   = c("Never", "A few times/year", "A few times/month", "A few times/week", "Every day")
+Frequency2   = c("Never", "Once or twice/year", "A few times/year", "A few times/month", "Once/week or more")
+Agreement    = c("Strongly disagree", "Somewhat disagree", "Neutral", "Somewhat agree", "Strongly agree")
+Ld_change    = c("Much less", "Somewhat less", "About the same", "Somewhat more", "Much more")
+Learn_change = c("Much worse", "Somewhat worse", "In some ways it is better and in some ways it is worse", "About the same", "Somewhat better", "Much better")
+Prod_change  = c("Decreased significantly", "Decreased somewhat", "In some ways it has increased and in other ways it has decreased", "About the same", "Increased somewhat",
+                 "Increased significantly")
+Workload     = c("Yes, it has substantially decreased", "Yes, it has somewhat decreased", "No, it has stayed about the same", "Yes, it has somewhat increased", 
+                 "Yes, it has substantially increased")
+Compare      = c('Much less than before', 'Somewhat less than before', 'About the same', 'Somewhat more than before', 'Much more than before')
+Shopping     = c('0', '1', '2 or 3', '4 or more')
+Income       = c("Less than $10,000", "$10,000 to $14,999", "$15,000 to $24,999", "$25,000 to $34,999", "$35,000 to $49,999", "$50,000 to $74,999", "$75,000 to $99,999", 
+                "$100,000 to $124,999", "$125,000 to $149,999", "$150,000 to $199,999", "$200,000 or more")
+Incomechange = c('It has gone down a lot','It has gone down somewhat','It has stayed about the same', 'It has gone up somewhat', 'It has gone up a lot')
+Education    = c("Some grade/high school", "Completed high school or GED", "Some college or technical school","Bachelor's degree(s) or some graduate school","Completed graduate degree(s)")
+Risk         = c("Extremely low risk", "Low risk", "Medium risk", "High risk", "Extremely high risk")
+
+
+# categorical variables
+Mode = c(unique(df_wave1$pre_work_pri_mode))
+Unit = c(unique(df_wave1$housingunit))
+Mortgage = c(unique(df_wave1$tenure))
+
+
+# ordinal encoding function 
+encode_ordinal <- function(x) {
+  #order <- unique(x)
+  x <- as.numeric(factor(x, exclude = NA))
+  x
+}
+```
+
+Re-coding the data into numeric
+
+```{r}
+## Working section 
+working <- df_wave1 %>%
+    select(
+         # id
+         resp_id,       
+         # employment  
+         worker_pre,
+         worker_now,
+         jobchangejs,
+         studentjs,    
+         # work from home 
+         contains("wfh"),
+         workload,
+         contains("bzvm"),
+         contains("prod_"),       
+         # study from home 
+         ocla_pre,
+         contains("class_sche"),
+         learn_change,
+         contains("learn_")
+
+         )  %>%
+
+    mutate(wfh_pre_freq  = factor(wfh_pre_freq, order=TRUE, levels = Frequency),
+           wfh_freq_exp  = factor(wfh_freq_exp, order=TRUE, levels = Frequency),
+           att_wfh_socint  = factor(att_wfh_socint, order=TRUE, levels = Agreement),
+           att_wfh_hardmot  = factor(att_wfh_hardmot, order=TRUE, levels = Agreement),
+           att_wfh_techfrus  = factor(att_wfh_techfrus, order=TRUE, levels = Agreement),
+           workload = factor(workload, order=TRUE, levels = Workload),
+           bzvm_pre = factor(bzvm_pre, order=TRUE, levels = Frequency1),
+           bzvm_exp = factor(bzvm_exp, order=TRUE, levels = Frequency1),
+           prod_change = factor(prod_change, order=TRUE, levels = Prod_change),
+           learn_change = factor(learn_change, order=TRUE, levels = Learn_change)
+          )
+
+for(i in 2:ncol(working)) {# for-loop over columns
+  working[ , i] <- encode_ordinal(working[ , i])
+}
+
+
+
+
+## Attitudes section 
+attitudes <-df_wave1 %>% 
+  select(
+         # id
+         resp_id,        
+         #all attitudes 
+         contains("att_"),
+         contains("risk_percp"),
+         contains("enjoy_change")
+          )%>%
+  mutate(
+    across(.cols = c(contains("att_")),
+    .fns = ~factor(.x, order=TRUE, levels = Agreement)),
+    across(.cols = c(contains("risk_percp")),
+    .fns = ~factor(.x, order=TRUE, levels = Risk)),
+    enjoy_change_YN = factor(enjoy_change_YN, order=TRUE, levels = c('No', 'Maybe', 'Yes'))) %>%
+
+           
+  mutate(across(.cols = -resp_id,
+    .fns = encode_ordinal))   
+
+
+
+
+## Commuting information 
+commute_travel <-df_wave1 %>% 
+  select(   
+         # id
+         resp_id, 
+         
+         # travel mode before, during and after covid 
+         pre_work_pri_mode, 
+         pre_sch_pri_mode, 
+         now_work_pri_mode,
+         apr_sch_pri_mode,
+         scom_mode_exp, 
+         wcom_mode_exp, 
+         # days of commuting 
+         pre_work_com_days,
+         pre_sch_com_days,
+         now_work_com_days,
+         apr_sch_com_days,
+         # travel time for commuting
+         pre_work_pri_time,
+         pre_sch_pri_time,
+         now_work_pri_time,
+         apr_sch_pri_time,
+         # travel distance for commuting 
+         pre_work_com_dist,
+         pre_sch_com_dist,
+         now_com_dist
+         )%>%
+  
+  mutate(across(
+    .cols = c(contains("mode")),
+    .fns = ~factor(.x, order=TRUE, levels = Mode))) %>%
+  mutate(across(.cols = c(contains("mode")),
+    .fns = encode_ordinal)) 
+
+
+
+
+## Transport change
+transport_change <-df_wave1 %>%
+  select(
+         # id
+         resp_id, 
+         # accessibility  
+         bike,
+         driver,
+         # transit, active mobility, ride hail,telework change 
+         contains("tr_freq"), contains("decrease_transit"), contains("increase_bike"),
+         contains("ld_")
+         ) %>%
+  
+  mutate(across(
+    .cols = c(contains("tr_freq_pre")),
+    .fns = ~factor(.x, order=TRUE, levels = Frequency1))) %>%
+  mutate(across(
+    .cols = c(contains("tr_freq_exp")),
+    .fns = ~factor(.x, order=TRUE, levels = Compare))) %>%
+  mutate(ld_bz  = factor(ld_bz, order=TRUE, levels = Frequency2),
+         ld_per = factor(ld_per, order=TRUE, levels = Frequency2),
+         ld_per_change = factor(ld_per_change, order=TRUE, levels = Ld_change),
+         ld_bz_change = factor(ld_bz_change, order=TRUE, levels = Ld_change)) %>%
+  
+  mutate(across(.cols = c(contains("tr_freq_pre"), contains("tr_freq_exp"), contains("ld_"), contains("decrease_transit"), contains("increase_bike"), bike, driver),
+    .fns = encode_ordinal))  
+
+
+
+
+## Shopping and Dinning
+shopping_dinning <-df_wave1 %>%
+  select(
+         # id
+         resp_id, 
+         # shopping dining change 
+         contains("shdi")
+         ) %>%
+  
+  mutate(across(
+    .cols = c(contains("shdi_pre"),contains("tr_freq_exp")),
+    .fns = ~factor(.x, order=TRUE, levels = Frequency1))) %>%  
+  
+  mutate(across(
+    .cols = c(contains("shdi_now")),
+    .fns = ~factor(.x, order=TRUE, levels = Shopping))) %>% 
+  
+  mutate(across(.cols = c(contains("shdi")),
+    .fns = encode_ordinal)) 
+
+
+
+
+## Demography 
+demographic <- df_wave1 %>%
+  select(
+         # id
+         resp_id,  
+         # demographic 
+         age, gender, hispanic, 
+         contains("race_"),
+         contains("disability_"),
+         educ, # education 
+         # geographic 
+         ZIP_pre,
+         ZIP_now,
+         cbsa_code_pre,
+         cbsa_code_now, 
+         # housing information 
+         housingunit, bedrooms, patyrd, hhsize, 
+         contains("hhadults_"), # demographic information of adults number
+         hhchild, 
+         hhincome,
+         income_impact,
+         income_change,
+         home_move, 
+         home_move_exp,
+         # vehicle 
+         hhveh,
+         contains("veh_"),
+         # Internet
+         tenure,
+         contains("internet"),
+         contains("devices"),
+         contains("connect_change")
+         ) %>%
+    mutate(across(
+    .cols = c(educ),
+    .fns = ~factor(.x, order=TRUE, levels = Education))) %>% 
+  
+    mutate(educ = factor(educ, order=TRUE, levels = Education),
+           housingunit = factor(housingunit, order=TRUE, levels = Unit),
+           hhincome = factor(hhincome, order=TRUE, levels = Income),     
+           income_change = factor(income_change, order=TRUE, levels = Incomechange),
+           hhveh = factor(hhveh, order=TRUE, levels = c('0', '1', '2', '3', '4 or more')),
+           tenure = factor(tenure, order=TRUE, levels = Mortgage)) %>% 
+    mutate(across(
+    .cols = c(contains("internet")),
+    .fns = ~factor(.x, order=TRUE, levels = c("No", "I'm not sure", "Yes")))) %>% 
+  
+   mutate(across(.cols = c(contains("ZIP")|contains("cbsa"),hhveh),
+     .fns = as.numeric))%>%
+
+  mutate(across(.cols = c(where(is.character)|where(is.factor)),
+    .fns = encode_ordinal)) 
+
+
+
+
+## refine
+demographic %<>%
+  mutate(hispanic = hispanic-1,
+       patyrd = patyrd-1,
+       home_move = home_move-1,
+       veh_sold = veh_sold -1,
+       veh_purchase = veh_purchase-1,
+       internet_con = internet_con-1,
+       mob_internet = mob_internet-1)%>%
+  mutate(home_move = replace(home_move, home_move == 2, 1))
+
+transport_change %<>%
+  mutate(bike = bike-1,
+         driver = driver-1)
+
+working %<>%
+  mutate(worker_pre = worker_pre-1,
+         worker_now = worker_now-1,
+         jobchangejs = jobchangejs-1,
+         studentjs = studentjs-1,
+         wfh_pre = wfh_pre-1,
+         wfh_now = wfh_now-1,
+         wfh_expect = wfh_expect-1)
+
+attitudes %<>%
+  mutate(enjoy_change_YN = enjoy_change_YN-1)#%>%
+  #mutate(enjoy_change_YN = replace(enjoy_change_YN, enjoy_change_YN == 2, 1))
+
+
+#put all data frames into list
+df <- list(demographic, working, commute_travel, transport_change,shopping_dinning, attitudes)      
+
+#merge all data frames together
+df %<>% reduce(full_join, by='resp_id')
+write.csv(df, "./output/rawdata.csv",row.names = FALSE, na = ".")
+
+```
+
+
+Getting the selected questions and variables of cycling for wave 1 full samples. 
+
+```{r}
+#Obtain bike data 
+#glimpse(df)
+data <- df %>%
+  select(
+    tr_freq_pre_bikepers,
+    tr_freq_now_bikepers,
+    tr_freq_exp_bikepers,
+    educ,
+    age,
+    hhincome,
+    hhveh,
+    bike,
+    bzvm_pre,
+    race_1,
+    disability_7,
+    
+    # covid 
+    att_covid_selfsevere,
+    att_covid_friendssevere,
+    att_covid_stayhome,
+    att_covid_stayhome_norm,
+    risk_percp_1,
+    risk_percp_2,
+    risk_percp_3,
+    risk_percp_4,
+    risk_percp_5,
+    risk_percp_6,
+    att_covid_overreact,
+    att_covid_economic,
+    
+    # Life convenience
+    att_shop_online,
+    att_wfh_likewfh.y,
+    att_tech_videobusiness,
+    att_tech_videofriends,
+    att_tech_hscolonline,
+    
+    # Environmental awareness 
+    att_environ_lifst,
+    att_environ_lesspolluting,
+    att_environ_plane,
+    
+    # Pre covid attitudes to being social
+    att_socit_safetransit,
+    att_socit_outside,
+    att_socit_others,
+    
+    # outsides Index 
+    att_shop_chore,
+    att_wfh_socint.y,
+    att_wfh_hardmot.y,
+    att_lifst_transition
+    
+    )
+
+write.csv(data, "./data_recoding_output/data_bike.csv",row.names = FALSE, na =".")
+```
+
+Getting the selected questions and variables of walking for wave 1 full samples. 
+
+```{r}
+#Obtain walk data 
+#glimpse(df)
+data <- df %>%
+  select(
+    tr_freq_pre_walk,
+    tr_freq_now_walk,
+    tr_freq_exp_walk,
+    educ,
+    age,
+    hhincome,
+    hhveh,
+    bike,
+    bzvm_pre,
+    race_1,
+    disability_7,
+    
+    # covid 
+    att_covid_selfsevere,
+    att_covid_friendssevere,
+    att_covid_stayhome,
+    att_covid_stayhome_norm,
+    risk_percp_1,
+    risk_percp_2,
+    risk_percp_3,
+    risk_percp_4,
+    risk_percp_5,
+    risk_percp_6,
+    att_covid_overreact,
+    att_covid_economic,
+    
+    # Life convenience
+    att_shop_online,
+    att_wfh_likewfh.y,
+    att_tech_videobusiness,
+    att_tech_videofriends,
+    att_tech_hscolonline,
+    
+    # Environmental awareness 
+    att_environ_lifst,
+    att_environ_lesspolluting,
+    att_environ_plane,
+    
+    # Pre covid attitudes to being social
+    att_socit_safetransit,
+    att_socit_outside,
+    att_socit_others,
+    
+    # outsides Index 
+    att_shop_chore,
+    att_wfh_socint.y,
+    att_wfh_hardmot.y,
+    att_lifst_transition
+    
+    )
+
+write.csv(data, "./data_recoding_output/data_walk.csv",row.names = FALSE, na =".")
+
+```

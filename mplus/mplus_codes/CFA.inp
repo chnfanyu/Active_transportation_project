@@ -1,0 +1,30 @@
+TITLE: covid data CFA;
+DATA: FILE IS data_bike.csv;
+VARIABLE: NAMES ARE prebike frebike intent educ age income hhveh bike prebzm white disab
+   cov1-cov12 onl1-onl5 env1-env3 soc1-soc3 out1-out4;
+          MISSING = .;
+          USEVARIABLES ARE cov1-cov12 env1-env3 onl1-onl5 prebike bike frebike;
+          CATEGORICAL = cov1-cov12 env1-env3 onl1-onl5 prebike bike;  
+
+ANALYSIS: 
+          !ROTATION=VARIMAX;
+           ROTATION=GEOMIN (oblique);
+          !ESTIMATOR=ML;
+          !ROTATION=PROMAX;
+           PARAMETERIZATION=THETA;
+           STARTS = 100;
+
+
+MODEL:
+          f1 by cov1-cov4;
+          f2 by cov11 cov12 cov3;
+          f3 by cov5-cov10;
+          f4 by env1-env3;          
+          f5 by onl1-onl5;
+          f6 by prebike bike frebike
+        
+
+
+OUTPUT:   
+          STDYX;
+          MODINDICES;

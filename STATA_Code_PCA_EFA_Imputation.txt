@@ -1,0 +1,75 @@
+Step 1. import the dataset from recoding ouput 
+
+
+
+
+Step 2. selected the attitudinal variables (indicators)
+
+global xlist att_covid_selfsevere att_covid_friendssevere att_covid_stayhome att_covid_stayhome_norm risk_percp_1 risk_percp_2 risk_percp_3 risk_percp_4 risk_percp_5 risk_percp_6 att_covid_overreact att_covid_economic att_shop_online att_wfh_likewfhy att_tech_videobusiness att_tech_videofriends att_tech_hscolonline att_environ_lifst att_environ_lesspolluting att_environ_plane bike tr_freq_pre_bikepers tr_freq_now_bikepers
+
+
+
+Step 3. Correlation and covariance
+
+corr $xlist, cov
+
+#Polychoric correlation 
+
+polychoric $xlist
+
+
+
+Step 4. Princical conmonent analysis (PCA) (https://www.youtube.com/watch?v=xNTsAVj0t7U)
+
+pca $xlist
+
+# PCA postestimation: (https://www.stata.com/manuals/mvpcapostestimation.pdf)
+
+screeplot, yline(1)
+
+estat kmo
+
+
+
+Step 5. Explanatory factor analysis without imputation
+
+factor $xlist
+
+
+# CFA with deisgned factors: 6
+
+factor $xlist, factor(6)
+
+
+# promax rotation
+rotate, promax normalize blanks(.3)
+
+# varimax rotation 
+rotate, varimax normalize blanks(0.3)
+
+
+
+
+Step 6. Factor analysis with imputation: (https://stats.oarc.ucla.edu/stata/faq/how-can-i-do-factor-analysis-with-missing-data-in-stata/ )
+
+mi set mlong
+
+mi register imputed $xlist
+
+mi impute mvn $xlist, emonly
+
+matrix cov_em=r(Sigma_em)
+
+matrix list cov_em
+
+summarize $xlist
+
+factormat cov_em, n(4833) fact(6) ml
+
+
+# promax rotation 
+rotate, promax normalize blanks(.3)
+
+
+# varimax rotation 
+rotate, varimax normalize blanks(.3)

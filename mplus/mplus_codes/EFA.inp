@@ -1,0 +1,22 @@
+ TITLE: covid data EFA;
+ DATA: FILE IS data_bike.csv;
+ VARIABLE: NAMES ARE prebike frebike intent educ age income hhveh bike prebzm white disab
+   cov1-cov12 onl1-onl5 env1-env3 soc1-soc3 out1-out4;
+          MISSING = .;
+          USEVARIABLES ARE cov1-cov12 env1-env3 onl1-onl5 bike prebike frebike; 
+          CATEGORICAL = cov1-cov12 env1-env3 onl1-onl5 bike prebike;  
+
+ANALYSIS: TYPE = EFA 6 7;
+          ROTATION=VARIMAX;
+
+          !ROTATION=GEOMIN (oblique);
+          !ROTATION=PROMAX;
+          !ESTIMATOR=MLR;
+
+
+          
+
+OUTPUT: STANDARDIZED;
+        !MODINDICES;
+
+PLOT: TYPE IS PLOT2;
